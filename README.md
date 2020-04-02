@@ -1,13 +1,14 @@
-# Slack勤怠通知ボタン
+# Slack勤怠ボタン
 
-Slackへ勤怠開始・休憩・勤怠終了の通知する際に
-複数ワークスペース・複数チャンネルに投稿するスクリプト
+Button to report attendance to slack
+- Supports multiple workspaces and multiple channels.
+- Record the time.
+- There are only the minimum functions necessary for me.
 
-わりと自分に最低限な機能しか無い
 
-![preview](images/preview.png | width=300)
+<img src="images/preview.png" width="300">
 
-![results](images/results.png | width=300)
+<img src="images/results.png" width="300">
 
 
 ## Installation
@@ -25,8 +26,8 @@ Details
   - copy `API Token`
 
 - Get thread_ts from message.
-  - ![スレッドにコメントを行い、そのスレッドコメントの](images/thread_ts_1.png | width=100)
-  - ![URLを取得する](images/thread_ts_2.png | width=100)
+  - <img src="images/thread_ts_1.png" width="300">
+  - <img src="images/thread_ts_2.png" width="300">
   - Get `thread_ts` parameter value from query string.
 
 
