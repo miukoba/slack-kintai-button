@@ -1,0 +1,9 @@
+let icon_url = 'https://example.com/user_icon.png';
+
+let user_name = 'kintai user name';
+
+let target_list = [
+// channel,    thread_ts,           API Token
+  ['#kintai1', '1234567890.012300', 'xoxb-111111111111-11111111111111-aaaaaaaaaaaaaaaaaaaaaaaa'],
+  ['#kintai2', '1234567890.012300', 'xoxb-222222222222-22222222222222-bbbbbbbbbbbbbbbbbbbbbbbb'],
+];
