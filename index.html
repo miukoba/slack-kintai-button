@@ -30,19 +30,6 @@
 <script src="config.js"></script>
 <script>
     console.log(target_list);
-    dayjs.locale('ja');
-    let now = dayjs();
-    let now_date = now.format('YYYY/MM/DD(ddd)');
-    let now_time = now.format('HH:mm');
-    let now_add_1_hour_time = now.add(1, 'hour').format('HH:mm');
-    let now_full = now_date + ' ' + now_time;
-
-    let message_start_working = '勤務開始します ' + now_full;
-    let message_take_a_break = '1時間休憩します ' + now_time + '-' + now_add_1_hour_time + '予定です。';
-    let message_break_is_over = '休憩おわりました。 ' + now_time;
-    let message_finish_working = '勤務終了します ' + now_time;
-    let message_mistake = '↑間違いです... :bow:';
-
     target_list.forEach((t) => {
         let param_channel = t[0];
         let param_thread_ts = t[1];
@@ -50,6 +37,19 @@
 
         $(function () {
             $('.post').on('click', function (event) {
+                dayjs.locale('ja');
+                let now = dayjs();
+                let now_date = now.format('YYYY/MM/DD(ddd)');
+                let now_time = now.format('HH:mm');
+                let now_add_1_hour_time = now.add(1, 'hour').format('HH:mm');
+                let now_full = now_date + ' ' + now_time;
+
+                let message_start_working = '勤務開始します ' + now_full;
+                let message_take_a_break = '1時間休憩します ' + now_time + '-' + now_add_1_hour_time + '予定です。';
+                let message_break_is_over = '休憩おわりました。 ' + now_time;
+                let message_finish_working = '勤務終了します ' + now_time;
+                let message_mistake = '↑間違いです... :bow:';
+
                 let url = 'https://slack.com/api/chat.postMessage';
                 let ele_id = $(this).attr('id');
                 let data = {
