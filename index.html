@@ -50,6 +50,11 @@
 
         $(function () {
             $('.post').on('click', function (event) {
+                const isAgreed = window.confirm('投稿しますか？')
+                if (!isAgreed) {
+                    console.log('キャンセルしました')
+                    return
+                }
                 let url = 'https://slack.com/api/chat.postMessage';
                 let ele_id = $(this).attr('id');
                 let data = {
