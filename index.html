@@ -37,6 +37,12 @@
 
         $(function () {
             $('.post').on('click', function (event) {
+                const isAgreed = window.confirm('投稿しますか？')
+                if (!isAgreed) {
+                    console.log('キャンセルしました')
+                    return
+                }
+
                 dayjs.locale('ja');
                 let now = dayjs();
                 let now_date = now.format('YYYY/MM/DD(ddd)');
