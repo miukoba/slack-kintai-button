@@ -2,6 +2,8 @@ let icon_url = 'https://example.com/user_icon.png';
 
 let user_name = 'kintai user name';
 
+// let default_custom_message = 'まで離席します';
+
 let target_list = [
 // channel,    thread_ts,           API Token
   ['#kintai1', '1234567890.012300', 'xoxb-111111111111-11111111111111-aaaaaaaaaaaaaaaaaaaaaaaa'],

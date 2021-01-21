@@ -6,8 +6,7 @@
     <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" type="text/css">
 </head>
 <body>
-<p>
-    <legend>Actions</legend>
+<h1>固定投稿</h1>
 <p>
     <button type="button" class="post" id="start_working">勤務開始します</button>
 </p>
@@ -15,13 +14,23 @@
     <button type="button" class="post" id="take_a_break">1時間休憩します</button>
 </p>
 <p>
-    <button type="button" class="post" id="break_is_over">休憩おわりました</button>
+    <button type="button" class="post" id="afk">暫く離席します</button>
+</p>
+<p>
+    <button type="button" class="post" id="break_is_over">戻りました</button>
 </p>
 <p>
     <button type="button" class="post" id="finish_working">勤務終了します</button>
 </p>
 <p>
-    <button type="button" class="post" id="mistake">間違いました :bow:</button>
+    <button type="button" class="post" id="mistake">↑間違いです... :bow:</button>
+</p>
+<hr>
+<h1>カスタム投稿</h1>
+<p>
+    <span id="custom-text-info" style="display:none">↓デフォルトメッセージを config.js で設定可能です</span>
+    <textarea name="custom_text" id="custom_text"></textarea>
+    <button type="button" class="post" id="custom">↑このメッセージで投稿</button>
 </p>
 
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
@@ -29,56 +38,69 @@
 <script src="https://unpkg.com/dayjs@1.8.21/locale/ja.js"></script>
 <script src="config.js"></script>
 <script>
-    console.log(target_list);
+    // console.log(target_list)
     $(function () {
+        if (typeof default_custom_message === 'undefined') {
+            $('#custom-text-info').show()
+            default_custom_message = 'まで離席します'
+        }
+        // console.log(default_custom_message)
+        $('#custom_text').val(default_custom_message)
+
+        // 一旦 ◯◯まで離席します を想定して、カーソルは最初に移動
+        $('#custom_text').trigger('focus').get(0).setSelectionRange(0, 0)
+
         $('.post').on('click', function (event) {
-            const isAgreed = window.confirm('投稿しますか？')
+            dayjs.locale('ja')
+            let now = dayjs()
+            let now_date = now.format('YYYY/MM/DD(ddd)')
+            let now_time = now.format('HH:mm')
+            let now_add_1_hour_time = now.add(1, 'hour').format('HH:mm')
+            let now_full = now_date + ' ' + now_time
+
+            let message_start_working = '勤務開始します ' + now_full
+            let message_take_a_break = '1時間休憩します ' + now_time + '-' + now_add_1_hour_time + '予定です'
+            let message_afk = '暫く離席します'
+            let message_break_is_over = '戻りました ' + now_time
+            let message_finish_working = '勤務終了します ' + now_full
+            let message_mistake = '↑間違いです... :bow:'
+            let message_custom = $('#custom_text').val()
+
+            let url = 'https://slack.com/api/chat.postMessage'
+            let ele_id = $(this).attr('id')
+
+            let message = eval('message_' + ele_id)
+            const isAgreed = window.confirm('投稿しますか？「' + message + '」')
             if (!isAgreed) {
                 console.log('キャンセルしました')
                 return
             }
 
-            dayjs.locale('ja');
-            let now = dayjs();
-            let now_date = now.format('YYYY/MM/DD(ddd)');
-            let now_time = now.format('HH:mm');
-            let now_add_1_hour_time = now.add(1, 'hour').format('HH:mm');
-            let now_full = now_date + ' ' + now_time;
-
-            let message_start_working = '勤務開始します ' + now_full;
-            let message_take_a_break = '1時間休憩します ' + now_time + '-' + now_add_1_hour_time + '予定です。';
-            let message_break_is_over = '休憩おわりました。 ' + now_time;
-            let message_finish_working = '勤務終了します ' + now_time;
-            let message_mistake = '↑間違いです... :bow:';
-
-            let url = 'https://slack.com/api/chat.postMessage';
-            let ele_id = $(this).attr('id');
-
             target_list.forEach((t) => {
-                let param_channel = t[0];
-                let param_thread_ts = t[1];
-                let param_token = t[2];
+                let param_channel = t[0]
+                let param_thread_ts = t[1]
+                let param_token = t[2]
                 let data = {
                     token: param_token,
                     channel: param_channel,
                     username: user_name,
                     icon_url: icon_url,
-                    text: eval('message_' + ele_id),
+                    text: message,
                     thread_ts: param_thread_ts,
-                };
-                // console.log(data);
+                }
 
+                // console.log(data)
                 $.ajax({
                     type: 'GET',
                     url: url,
                     data: data,
                 }).then(
-                  data => console.log('success'),
-                  error => alert('error!')
-                );
-            });
-        });
-    });
+                    data => console.log('success'),
+                    error => alert('error!')
+                )
+            })
+        })
+    })
 </script>
 </body>
 </html>
