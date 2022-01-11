@@ -6,6 +6,9 @@
     <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" type="text/css">
 </head>
 <body>
+<input id="reply_broadcast" type="checkbox" />
+<label for="reply_broadcast" style="display:inline-block">チャンネルにも投稿</label>
+
 <h1>固定投稿</h1>
 <p>
     <button type="button" class="post" id="start_working">勤務開始します</button>
@@ -83,6 +86,8 @@
         $('#custom_text').trigger('focus').get(0).setSelectionRange(0, 0)
 
         $('.post').on('click', function (event) {
+            let reply_broadcast = $('#reply_broadcast').prop('checked')
+
             dayjs.locale('ja')
             let now = dayjs()
             let now_date = now.format('YYYY/MM/DD(ddd)')
@@ -121,6 +126,7 @@
                     username: user_name,
                     icon_url: icon_url,
                     text: message,
+                    reply_broadcast: reply_broadcast,
                     thread_ts: param_thread_ts,
                 }
 
