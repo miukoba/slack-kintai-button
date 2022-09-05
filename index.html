@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <title>Slack 勤怠 Button</title>
     <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" type="text/css">
+    <style>
+        .post, #clear_histories {
+            width: 162px;
+            border-radius: 10px;
+        }
+    </style>
 </head>
 <body>
 <input id="reply_broadcast" type="checkbox" />
@@ -37,7 +43,7 @@
 <h1>カスタム投稿</h1>
 <p>
     <span id="custom-text-info" style="display:none">↓デフォルトメッセージを config.js で設定可能です</span>
-    <textarea name="custom_text" id="custom_text"></textarea>
+    <textarea name="custom_text" id="custom_text"  style="margin-bottom: 0px"></textarea>
     <button type="button" class="post" id="custom">↑このメッセージで投稿</button>
 </p>
 
@@ -45,7 +51,7 @@
 
 <h1>履歴</h1>
 <button type="button" id="clear_histories">クリアする</button>
-<textarea id="histories" cols="30" rows="30"></textarea>
+<textarea id="histories" cols="30" rows="30" style="margin-top: 8px;"></textarea>
 
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
