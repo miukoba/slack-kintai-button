@@ -57,6 +57,7 @@
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
 <script src="https://unpkg.com/dayjs@1.8.21/locale/ja.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
 <script src="config.js"></script>
 <script>
     // console.log(target_list)
@@ -96,6 +97,11 @@
         let item = document.getElementById('take_a_break');
         item.innerText = specifyBreakTime() + '分休憩します';
     }
+
+    var options = {
+        label: '🌓'
+    }
+    new Darkmode(options).showWidget();
 
     $(function () {
         showHistories()
