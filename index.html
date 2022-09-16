@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <title>Slack 勤怠 Button</title>
     <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" type="text/css">
+    <style>
+        .post, #clear_histories {
+            width: 162px;
+            border-radius: 10px;
+        }
+    </style>
 </head>
 <body>
 <input id="reply_broadcast" type="checkbox" />
@@ -14,7 +20,12 @@
     <button type="button" class="post" id="start_working">勤務開始します</button>
 </p>
 <p>
-    <button type="button" class="post" id="take_a_break">1時間休憩します</button>
+    <button type="button" class="post" id="take_a_break">60分休憩します</button>
+    &nbsp;
+    <input type="radio" name="breakOption" value="60" onclick="switchBreakTime()" checked>60
+    <input type="radio" name="breakOption" value="45" onclick="switchBreakTime()">45
+    <input type="radio" name="breakOption" value="30" onclick="switchBreakTime()">30
+    <input type="radio" name="breakOption" value="15" onclick="switchBreakTime()">15
 </p>
 <p>
     <button type="button" class="post" id="afk">暫く離席します</button>
@@ -23,7 +34,7 @@
     <button type="button" class="post" id="break_is_over">戻りました</button>
 </p>
 <p>
-    <button type="button" class="post" id="finish_working">勤務終了します</button>
+    <button type="button" class="post" id="finish_working"  style="margin-right: 16px;">勤務終了します</button>
 </p>
 <p>
     <button type="button" class="post" id="mistake">↑間違いです... :bow:</button>
@@ -32,7 +43,7 @@
 <h1>カスタム投稿</h1>
 <p>
     <span id="custom-text-info" style="display:none">↓デフォルトメッセージを config.js で設定可能です</span>
-    <textarea name="custom_text" id="custom_text"></textarea>
+    <textarea name="custom_text" id="custom_text"  style="margin-bottom: 0px"></textarea>
     <button type="button" class="post" id="custom">↑このメッセージで投稿</button>
 </p>
 
@@ -40,11 +51,12 @@
 
 <h1>履歴</h1>
 <button type="button" id="clear_histories">クリアする</button>
-<textarea id="histories" cols="30" rows="30"></textarea>
+<textarea id="histories" cols="30" rows="30" style="margin-top: 8px;"></textarea>
 
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
 <script src="https://unpkg.com/dayjs@1.8.21/locale/ja.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
 <script src="config.js"></script>
 <script>
     // console.log(target_list)
@@ -66,6 +78,29 @@
         histories.push(message);
         localStorage.setItem(HISTORIES_KEY, JSON.stringify(histories));
     }
+
+    function specifyBreakTime() {
+        let breakOptions = document.getElementsByName('breakOption');
+        let len = breakOptions.length;
+        let breakTime = '';
+        for(let i = 0; i < len; i++) {
+            if(breakOptions.item(i).checked) {
+                breakTime = breakOptions.item(i).value;
+                break;
+            }
+        }
+        return breakTime;
+    }
+
+    function switchBreakTime() {
+        let item = document.getElementById('take_a_break');
+        item.innerText = specifyBreakTime() + '分休憩します';
+    }
+
+    var options = {
+        label: '🌓'
+    }
+    new Darkmode(options).showWidget();
 
     $(function () {
         showHistories()
@@ -93,10 +128,19 @@
             let now_date = now.format('YYYY/MM/DD(ddd)')
             let now_time = now.format('HH:mm')
             let now_add_1_hour_time = now.add(1, 'hour').format('HH:mm')
+            let now_add_45_minute_time = now.add(45, 'minute').format('HH:mm')
+            let now_add_30_minute_time = now.add(30, 'minute').format('HH:mm')
+            let now_add_15_minute_time = now.add(15, 'minute').format('HH:mm')
             let now_full = now_date + ' ' + now_time
 
             let message_start_working = '勤務開始します ' + now_full
-            let message_take_a_break = '1時間休憩します ' + now_time + '-' + now_add_1_hour_time + '予定です'
+
+            // let message_take_a_break = '1時間休憩します ' + now_time + '-' + now_add_1_hour_time + '予定です'
+            let message_take_a_break_60 = '60分休憩します ' + now_time + '-' + now_add_1_hour_time + '予定です'
+            let message_take_a_break_45 = '45分休憩します ' + now_time + '-' + now_add_45_minute_time + '予定です'
+            let message_take_a_break_30 = '30分休憩します ' + now_time + '-' + now_add_30_minute_time + '予定です'
+            let message_take_a_break_15 = '15分休憩します ' + now_time + '-' + now_add_15_minute_time + '予定です'
+
             let message_afk = '暫く離席します ' + now_time
             let message_break_is_over = '戻りました ' + now_time
             let message_finish_working = '勤務終了します ' + now_full
@@ -106,7 +150,14 @@
             let url = 'https://slack.com/api/chat.postMessage'
             let ele_id = $(this).attr('id')
 
-            let message = eval('message_' + ele_id)
+            let message;
+
+            if (ele_id == 'take_a_break') {
+                message = eval('message_' + ele_id + '_' + specifyBreakTime());
+            } else {
+                message = eval('message_' + ele_id)
+            }
+
             const isAgreed = window.confirm('投稿しますか？「' + message + '」')
             if (!isAgreed) {
                 console.log('キャンセルしました')
